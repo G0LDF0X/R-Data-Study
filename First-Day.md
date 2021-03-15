@@ -1,4 +1,4 @@
-# Chapter 1
+#Chapter 1
 <br>
 ##R 언어의 사용처##
   1) 통계 분석<br>
