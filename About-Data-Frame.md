@@ -6,11 +6,11 @@
 df_midterm <- data.frame(english, math)<br>
 df_midterm<br>
 <br>
-##     english   math<br>
-## 1      90      50<br>
-## 2      80      60<br>
-## 3      60     100<br>
-## 4      70      20<br>
+.##     english   math<br>
+.## 1      90      50<br>
+.## 2      80      60<br>
+.## 3      60     100<br>
+.## 4      70      20<br>
 <br>
 
 달러 기호($)는 데이터 프레임 안에 있는 변수를 지정할 때 사용한다.<br>
