@@ -12,6 +12,7 @@ df_midterm<br>
 ## 3      60     100<br>
 ## 4      70      20<br>
 <br>
+
 달러 기호($)는 데이터 프레임 안에 있는 변수를 지정할 때 사용한다.<br>
 <br>
 mean(df_midterm$english)<br>
