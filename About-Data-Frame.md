@@ -1,7 +1,7 @@
 # Chapter 4
 
 ### 데이터 프레임 만들기
-데이터 프레임을 만들 때는 data.frame() 함수를 사용해서 생성한다.<br>
+데이터 프레임을 만들 때는 **data.frame()** 함수를 사용해서 생성한다.<br>
 <br>
 df_midterm <- data.frame(english, math)<br>
 df_midterm<br>
@@ -95,4 +95,7 @@ Min(Minimum, 최솟값): 가장 작은 값<br>
 Median(Median, 중앙값): 중앙에 위치하는 값<br>
 3rd Qu(3rd Qunatile, 3사분위수): 상위 75%(4분의 3) 지점에 위치하는 값<br>
 Max(Maximum, 최댓값): 가장 큰 값<br>
+<br>
+as.data.frame()은 데이터 속성을 데이터 프레임 형태로 바꾸는 함수.<br>
+ggplot2::mpg는 ggplot2에 들어있는 mgp 데이터를 지칭하는 코드다.<br>
 <br>
