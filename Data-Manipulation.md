@@ -21,15 +21,36 @@ exam %>% filter(class %in% c(1, 3, 5))<br>
 <br>
 파이프 기호를 여러 개 나열하며 함수를 여러 번 사용할 수도 있다.<br>
 <br>
-exam %>% <br>
-  select(id, math) %>% <br>
-  head(10)<br>
+exam %>% select(id, math) %>% head(10)<br>
 <br>
 
-arrange(): 정렬<br>
-mutate(): 변수 추가<br>
-summarise(): 통계치 산출<br>
-group_by(): 집단별로 나누기<br>
-left_join(): 데이터 합치기(열)<br>
-bind_rrows(): 데이터 합치기(행)<br>
+#### arrange(): 정렬
+괄호 안에는 정렬의 기준을 삼을 변수를 입력하면 된다.<br>
+기본적으로 정렬은 오름차순(낮음->높음)이다.<br>
+내림차순으로 정렬하고 싶은 경우에는 변수에 desc()를 적용하면 된다.<br>
+<br>
+exam %>% arrange(desc(math)) # math 내림차순 정렬<br>
+<br>
+정렬 기준으로 삼을 변수를 여러 개 지정하려면 쉼표를 이용해 변수를 나열한다. 이때, 먼저 첫번째 변수를 기준으로 오름차순 정렬한 뒤, 두번째 변수를 기준으로 다시 한 번 정렬한다.<br>
+<br>
+
+#### mutate(): 변수 추가
+괄호 안에는 **파생변수명 = 공식** 을 입력하면 된다.<br>
+파생변수를 여러 개 생성할 경우에는 쉼표로 구분한다.<br>
+<br>
+exam %>% mutate(total = math + english + science) %>% head<br>
+<br>
+
+#### summarise(): 통계치 산출
+exam %>% summarise(mean_math = mean(math))<br>
+<br>
+##    mean_math<br>
+## 1      57.45<br>
+<br>
+
+#### group_by(): 집단별로 나누기
+
+#### left_join(): 데이터 합치기(열)
+
+#### bind_rrows(): 데이터 합치기(행)
 <br>
