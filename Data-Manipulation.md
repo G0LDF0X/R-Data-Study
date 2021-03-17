@@ -44,8 +44,8 @@ exam %>% mutate(total = math + english + science) %>% head<br>
 #### summarise(): 통계치 산출
 exam %>% summarise(mean_math = mean(math))<br>
 <br>
-##    mean_math<br>
-## 1      57.45<br>
+##      mean_math<br>
+##1      57.45<br>
 <br>
 
 #### group_by(): 집단별로 나누기
