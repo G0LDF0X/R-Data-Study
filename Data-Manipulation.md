@@ -42,15 +42,38 @@ exam %>% mutate(total = math + english + science) %>% head<br>
 <br>
 
 #### summarise(): 통계치 산출
+summarise()는 전체를 요약한 값을 구하기보다는 group_by()와 조합해 집단별 요약표를 만들 때 사용한다.<br>
+사용처를 보면, group_by()로 뽑아낸 변수 옆에 summarise()로 통계를 낸 변수가 들어간다.<br>
+<br>
 exam %>% summarise(mean_math = mean(math))<br>
 <br>
-##      mean_math<br>
-##1      57.45<br>
+.##      mean_math<br>
+.## 1      57.45<br>
 <br>
+mutate()와 마찬가지로 summarise() 또한 여러 요약 통계량을 한 번에 산출할 수 있다.<br>
+<br>
+exam %>% group_by(class) %>% summarise(mean_math = mean(math), sum_math = sum(math), median_math = median(math), n = n())<br>
+<br>
+.## # A tibble: 5 x 5<br>
+.##      class mean_math sum_math median_math  n<br>
+.##    <int>     <dbl>    <int>       <dbl> <int><br>
+.## 1     1      46.2      185        47.5     4<br>
+.## 2     2      61.2      245        65       4<br>
+.## 3     3      45        180        47.5     4<br>
+.## 4     4      56.8      227        53       4<br>
+.## 5     5      78        312        79       4<br>
+<br>
+summarise로 만든 변수 mean_math, sum_math, median_math, n이 group_by로 뽑아낸 class 옆에 있는 것을 확인할 수 있다.<br>
+이때 n()은 빈도 수를 나타내는 함수다.<br>
 
 #### group_by(): 집단별로 나누기
+괄호 안에는 분리할 attribute를 넣는다. 해당 변수만을 출력한다.<br>
+group_by()는 출력 결과를 데이터 프레임의 업그레이드 버전인 **tibble** 형태로 만들어준다. tibble은  데이터 프레임에 몇 가지 기능이 추가된 것으로, 데이터 프레임을 다룰 때와 동일한 방식으로 활용할 수 있다.<br>
+<br>
 
 #### left_join(): 데이터 합치기(열)
+괄호 안에 합칠 프레임들을 나열하고, 기준으로 삼을 변수명을 **by** 에 지정하면 된다.<br>
+<u>이때 by에 기준 변수를 지정할 때, 변수명 앞뒤에 따옴표를 입력해야 한다.</u>
 
 #### bind_rrows(): 데이터 합치기(행)
 <br>
