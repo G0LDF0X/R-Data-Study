@@ -58,3 +58,17 @@ ggplot(data = mpg, aes(x=drv)) + geom_bar() # x가 이산값<br>
 ggplot(data = mpg, aes(x=hwy)) + geom_bar() # x가 연속값<br>
 <br>
 
+### 선 그래프 : 시간에 따라 달라지는 데이터 표현하기
+일별 환율처럼, 일정한 시간 간격을 두고 나열한 데이터를 **시계열 데이터(Time Series Data)** 라고 하고, 시계열 데이터를 선으로 표현한 그래프를 **시계열 그래프(Time Series Chart)** 라고 한다.<br>
+선 그래프를 그릴 때에는 **geom_line()** 함수를 이용한다.<br>
+<br>
+ggplot(data = economics, aes(x = date, y = unemploy)) + geom_line()<br>
+<br>
+
+### 상자 그림 : 집단 간 분포 차이 표현하기
+상자 그림(Box plot)은 데이터의 분포를 직사각형 상자 모양으로 표현한 그래프다. 따라서 상자 그림을 보면 분포를 알 수 있기 때문에 평균만 볼 때보다 데이터의 특징을 더 자세히 알 수 있다.<br>
+상자 그림을 표현할 때에는 **geom_boxplot()** 함수를 이용한다.
+<br>
+ggplot(data = mpg, aes(X = drv, y = hwy)) + geom_boxplot()<br>
+<br>
+ggplot2에는 이 외에도 색, 크기, 폰트 등 그래프의 세부적인 요소들을 조절할 수 있는 **치트 시트(Cheatsheets)** 기능이 있으며, 이는 매뉴얼에서 참고할 수 있다.<br>
