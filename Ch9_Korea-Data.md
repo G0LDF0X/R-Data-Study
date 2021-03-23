@@ -52,4 +52,23 @@ class(welfare$sex)를 입력해 변수의 타입을 확인하고, table(welfare$
 sex_income <- welfare %>% filter(!is.na(income)) %>% group_by(sex) %>% summarise(mean_income = mean(income))<br>
 ggplot(data = sex_income, aes(x = sex, y = mean_income)) + geom_col()<br>
 <br>
-이후 결과를 확인해보면 성별 간 월급의 평균을 알 수 있다. 이를 qqplot() 함수를 이용해 막대그래프로 만든다.
+이후 결과를 확인해보면 성별 간 월급의 평균을 알 수 있다. 이를 qqplot() 함수를 이용해 막대그래프로 만든다.<br>
+<br>
+
+## 나이와 월급의 관계
+
+### 변수 검토하기
+나이를 변수로 지정할 경우에도 전처리 하는 과정은 위에서 income을 처리하는 과정과 유사하다.<br>
+단, 여기서 나이는 출생년도로 되어있으므로 이상치를 결측처리 한 뒤 이를 현재 나이로 바꿔주는 파생변수가 만들어지는 과정이 추가된다.<br>
+조사가 2015년도에 진행되었으므로 2015년도를 기준으로 나이라는 파생변수를 만드는 과정은 아래와 같다.<br>
+<br>
+welfare$age <- 2015 - welfare$birth + 1<br>
+<br>
+
+### 변수 간 관계 분석하기
+이제 나이별 월급 평균표를 만들면 아래와 같다.<br>
+<br>
+age_income <- welfare %>% filter(!is.na(income)) %>% group_by(age) %>% summarise(mean_income = mean(income))<br>
+ggplot(data = age_income, aes(x = age, y = mean_income)) + geom_line()<br>
+<br>
+여기서는 선 그래프를 이용해 결과를 확인한다.
