@@ -38,4 +38,18 @@ welfare <- raw_welfare # 복사본 만들기<br>
 ## 성별에 따른 월급 차이
 
 ### 변수 검토하기
-### 
+class(welfare$sex)를 입력해 변수의 타입을 확인하고, table(welfare$sex)를 통해 몇 명이 있는지 확인한다.<br>
+이상치가 있는지 확인하고, 만약 있을 경우 ifelse() 함수를 통해 이상치를 처리해준다. 마찬가지로 table(is.na(welfare$sex))를 통해 결측치가 있는지 확인한다.<br>
+결측치가 없을 경우에는 ifelse() 함수를 통해 출력값인 1, 2를 각각 male과 female로 변경해준다. table과 qplot 함수를 통해 결과를 확인할 수 있다.<br>
+<br>
+월급을 나타내는 변수인 income도 위와 같은 처리를 해준다. 단, 월급은 연속값이기 때문에 table()이 아닌 summary(welfare$income)을 통해 요약 통계량을 확인한다.<br>
+이후 마찬가지로 ifelse() 함수를 통해 이상치를 전처리해주고, table() 함수를 통해 결측치가 있는지 확인한다.<br>
+<br>
+
+### 변수 간 관계 분석하기
+이제 성별 월급 평균표를 만들어 비교한다.<br>
+<br>
+sex_income <- welfare %>% filter(!is.na(income)) %>% group_by(sex) %>% summarise(mean_income = mean(income))<br>
+ggplot(data = sex_income, aes(x = sex, y = mean_income)) + geom_col()<br>
+<br>
+이후 결과를 확인해보면 성별 간 월급의 평균을 알 수 있다. 이를 qqplot() 함수를 이용해 막대그래프로 만든다.
