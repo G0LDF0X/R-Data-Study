@@ -1,4 +1,4 @@
-# Chapter 9(1~3)
+# Chapter 9
 해당 챕터에서는 '한국복지패널데이터'를 분석한다.<br>
 <br>
 **foreign** 패키지를 이용하면 SPSS, SAS, STATA등 다양한 통계분석 소프트웨어의 파일을 불러올 수 있다.<br>
@@ -133,3 +133,82 @@ ggplot(data = top10, aes(x = reorder(job, mean_income), y = mean_income)) + geom
 <br>
 bottom10 <- job_income %>% arrange(mean_income) %>% head(10)<br>
 ggplot(data = bottom10, aes(x = reorder(job, -mean_income), y = mean_income)) + geom_col() + coord_flip() + ylim(0, 850)<br>
+
+## 성별 직업 빈도
+해당 챕터에서는 성별에 따라 어떤 직업이 많은지에 대한 분석을 진행한다. 성별과 직업 변수에 대한 전처리 작업은 앞에서 진행되었으니 바로 변수간 관계 분석으로 들어간다.<br>
+<br>
+먼저 각 성별마다 직업별 빈도를 구해 상위 10개를 추출한다.<br>
+<br>
+job_male <- welfare %>% filter(!is.na(job) & sex == "male") %>% group_by(job) %>% summarise(n = n()) %>% arrange(desc(n)) %>% head(10)<br>
+job_female <- welfare %>% filter(!is.na(job) & sex == "female") %>% group_by(job) %>% summarise(n=n()) %>% arrange(desc(n)) %>% head(10)<br>
+<br>
+이렇게 제작된 빈도표를 가지고 그래프를 만들면 아래와 같다.<br>
+<br>
+ggplot(data = job_male, aes(x = reorder(job, n), y = n)) + geom_col() + coord_flip()<br>
+ggplot(data = job_female, aes(x = reorder(job, n), y = n)) + geom_col() + coord_flip()<br>
+<br>
+이때 빈도표를 만들때에는 앞서 geom_bar()을 사용한다고 이야기 했었는데, 해당 함수는 **원자료를 이용해 막대 그래프를 만들 때** 사용한다. 현재 과정에서는 직업별 빈도표를 이용해 막대그래프를 만들었기 때문에 geom_col()을 사용했다. (ggplot이 직접 세는게 아니라 표를 가지고 만들었기 때문에)<br>
+<br>
+
+## 종교 유무에 따른 이혼율
+해당 챕터에서는 다양한 변수와 종교 유무와 이혼율에 대해서 분석하고자 한다. 먼저 종교의 유무와 이혼율에 대한 변수의 전처리를 진행한다.<br>
+코드북을 참조하여 종교 변수의 1, 2를 각각 yes, no로 변환한다.<br>
+또한 혼인 상태 변수 또한 코드북을 참조하여 유배우/이혼의 경우일 때만 데이터 분석에 사용한다. welfare에 group_marriage라는 변수를 만들어 결혼을 했을 경우에는 marriage, 이혼했을 경우에는 divorce로 표기한다. 물론 이 과정에서도 누락되는 NA가 존재하므로, group_marriage를 분석에 사용할 경우에는 NA를 제외해주는 과정이 항상 필요로 들어가게 된다.<br>
+<br>
+이후 종교 유무에 따른 이혼율 표를 만든다. 먼저 종교 유무 및 결혼 상태별로 나눠 빈도표를 구한 뒤, 구해진 빈도를 전체 빈도로 나눠 비율을 구한다. 이때 round()함수를 이용하여 소수 첫째자리까지 표현되도록 한다.<br>
+<br>
+religion_marriage <- welfare %>% filter(!is.na(group_marriage)) %>% group_by(religion, group_marriage) %>% summarise(n = n()) %>% mutate(tot_group = sum(n)) %>% mutate(pct = round(n/tot_group * 100, 1))<br>
+<br>
+이때, **group_by(religion, group_marriage) %>% summarise(n = n())** 의 과정은 **count()** 라는 함수 하나로 요약할 수 있다. count() 함수를 사용하여 나타낼 경우는 아래와 같다.<br>
+<br>
+religion_marriage <- welfare %>% filter(!is.na(group_marriage)) %>% count(religion, group_marriage) %>% group_by(religion) %>% mutate(pct = round(n/sum(n) * 100, 1))<br>
+<br>
+위 과정을 거치면 이혼율 표가 만들어지며, 만들어진 표에서 이혼한 경우만을 모으면 아래와 같다.<br>
+<br>
+divorce <- religion_marriage %>% filter(group_marriage == "divorce") %>% select(religion, pct)<br>
+ggplot(data = divorce, aes(x = religion, y = pct)) + geom_col()<br>
+<br>
+이후 종교 뿐만이 아니라 연령대별에 대한 이혼율 표를 만들어보자. 연령대 및 결혼상태별 비율표를 만든 뒤, 앞에서 진행했던 것처럼 이혼한 경우를 추출해 이혼율 표를 만든다.<br>
+이때, 과정에서 초년인 "young"은 제외한다. 과정은 아래와 같다.<br>
+<br>
+ageg_marriage <- welfare %>% filter(!is.na(group_marriage)) %>% count(ageg, group_marriage) %>% group_by(ageg) %>% mutate(pct = round(n/sum(n) * 100, 1))<br>
+ageg_divorce <- ageg_marriage %>% filter(ageg != "young" & group_marriage == "divorce") %>% select(ageg, pct)<br>
+ggplot(data = ageg_divorce, aes(x = ageg, y = pct)) + geom_col()<br>
+<br>
+이 다음은 연령대 및 종교 유무에 따른 이혼율 표를 만든다. 과정은 지금까지 해왔던 것과 동일하다.<br>
+<br>
+ageg_religion_marriage <- welfare %>% filter(!is.na(group_marriage) & ageg != "young") %>% count(ageg, religion, group_marriage) %>% group_by(ageg, religion) %>% mutate(pct = round(n/sum(n) * 100, 1))<br>
+df_divorce <- ageg_religion_marriage %>% filter(group_marriage == "divorce") %>% select(ageg, religion, pct)<br>
+ggplot(data = df_divorce, aes(x = ageg, y = pct, fill = religion)) + geom_col(position = "dodge")<br>
+<br>
+
+## 지역별 연령대 비율
+해당 챕터에서는 지역별 연령대 비율을 분석해, 노년층이 많은 지역이 어디인지 알아본다. 연령대 변수는 앞에서 처리했으니 지역 변수를 검토하고 처리한다.<br>
+코드북을 참조하면 코드에 해당하는 지역이 어디인지 알 수 있으므로 데이터 프레임을 생성한 뒤, left_join()을 이용해 welfare에 삽입시킨다. 과정은 아래와 같다.<br>
+<br>
+list_region <- data.frame(code_region = c(1:7), region = c("서울", "수도권(인천/경기)", "부산/경남/울산", "대구/경북", "대전/충남", "강원/충북", "광주/전남/전북/제주도"))<br>
+welfare <- left_join(welfare, list_region, id = code_region)<br>
+<br>
+이후 welfare에서 select()를 이용해 code_region과 region을 확인해보면 코드북과 동일하게 기입되었음을 확인할 수 있다.<br>
+<br>
+이후에는 변수 간 관계를 분석하는 작업으로 들어간다. 먼저 지역별 연령대 비율표를 만든다. 과정은 앞서 했던 것처럼 지역에 따른 연령의 비율 분포를 계산한다.<br>
+<br>
+region_ageg <- welfare %>% count(region, ageg) %>% group_by(region) %>% mutate(pct = round(n/sum(n) * 100, 2))<br>
+<br>
+이후 그래프를 만들면 아래와 같다.<br>
+<br>
+ggplot(data = region_ageg, aes(x = region, y = pct, fill = ageg)) + geom_col() + coord_flip()<br>
+<br>
+이때, 노년층 비율이 높은 순서로 막대를 정렬하려면 먼저 노년층 비율을 내림차순으로 정렬한 뒤, 해당 순서대로 지역명 변수를 만들고 scale_x_discrete(limits = )에 해당 변수를 집어넣으면 된다. 과정은 아래와 같다.<br>
+<br>
+list_order_old <- region_ageg %>% filter(ageg == "old") %>% arrange(pct)<br>
+order <- list_order_old$region<br>
+ggplot(data = region_ageg, aes(x = region, y = pct, fill = ageg)) + geom_col() + coord_flip() + scale_x_discrete(limits = order)<br>
+<br>
+이때, 그래프를 보면 그래프의 색상 순서가 young, old, middle인 것을 확인할 수 있다. 해당 순서를 young, middle, old로 바꿔주기 위해 level을 생성하기로 한다.<br>
+막대 색깔을 순서대로 나열하려면 fill 파라미터에 지정할 변수의 범주(levels) 순서를 지정하면 된다.<br>
+현재 ageg 변수는 character 타입이기 때문에 levels가 존재하지 않는다.
+이때 **factor()** 을 이용해 ageg 변수를 **factor 타입** 으로 변환하고, **level 파라미터** 를 이용해 순서를 지정한다.<br>
+<br>
+region_ageg$ageg <- factor(region_ageg$ageg, level = c("old", "middle", "young"))<br>
+ggplot(data = region_ageg, aes(x = region, y = pct, fill = ageg)) + geom_col() + coord_flip()  + scale_x_discrete(limits = order)<br>
